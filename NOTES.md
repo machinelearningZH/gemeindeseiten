@@ -2,6 +2,8 @@
 
 Essential insights and (non obvious) findings gathered during coding work.
 
+- Typer enables styled help on GitHub Actions. CLI text assertions must strip
+  ANSI sequences with `Text.from_ansi(...).plain` before matching option names or summaries.
 - Municipal website and law collection links were checked on 2026-10-23. Collection
   entry pages are retained where the website automatically opens its first chapter
   (Kleinandelfingen, Nürensdorf and Hombrechtikon).

@@ -1,0 +1,4 @@
+csv_path: data/municipalities-canton-zurich.csv
+timeout: 20
+workers: 8
+user_agent: Mozilla/5.0 (compatible; MunicipalityLinkChecker/1.0)

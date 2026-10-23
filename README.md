@@ -1,8 +1,8 @@
 # Gemeinden im Kanton Zürich
 
-**Test, keine offizielle Publikation**
+**Dies ist ein Test ohne jegliche Gewähr, keine offizielle Publikation**
 
-Websites und Rechtssammlungen aller 160 Zürcher Gemeinden.
+Linksammlung zu Websites und Rechtssammlungen aller 160 Zürcher Gemeinden.
 Die Gemeindenamen führen zur jeweiligen Website, «Erlasse» zur kommunalen Rechtssammlung.
 
 Links geprüft am 23. Oktober 2026.

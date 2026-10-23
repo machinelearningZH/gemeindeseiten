@@ -9,6 +9,7 @@ from threading import Barrier, Event, Thread
 import httpx
 import pytest
 import yaml
+from rich.text import Text
 from typer.testing import CliRunner
 
 from municipalities import check_links
@@ -119,7 +120,7 @@ def test_cli_checks_both_columns_and_returns_exit_status(
         "2 checked, 2 available, 0 unavailable"
         if laws_path == "/ok"
         else "2 checked, 1 available, 1 unavailable"
-    ) in result.output
+    ) in Text.from_ansi(result.output).plain
 
 
 @pytest.mark.parametrize(
@@ -170,7 +171,7 @@ def test_missing_config_is_reported_as_cli_error(tmp_path: Path) -> None:
 def test_cli_help() -> None:
     result = runner.invoke(check_links.app, ["--help"])
     assert result.exit_code == 0
-    assert "--config" in result.output
+    assert "--config" in Text.from_ansi(result.output).plain
 
 
 def test_json_logging_includes_context_without_exception_values() -> None:

@@ -5,6 +5,7 @@ uv run check-links
 uv run check-links --help
 make check-links
 make check-links CONFIG=pfad/config.yaml
+uv run check-links --config config.schulgemeinden.yaml
 ```
 
 Prüft beide URL-Spalten der CSV mit HTTPX-GET-Anfragen, folgt Weiterleitungen und gibt für
@@ -48,3 +49,10 @@ Der Workflow **Publish README to GitHub Pages** veröffentlicht diese README bei
 auf `main` und kann dort auch manuell gestartet werden. Die CSV-Datei wird mit veröffentlicht.
 
 Bei Datenänderungen CSV und Tabelle gemeinsam aktualisieren; die Tests prüfen ihre Übereinstimmung.
+Die politischen Gemeinden stehen in `data/municipalities-canton-zurich.csv`, die
+Schulgemeinden in `data/school-municipalities-canton-zurich.csv`. Beide Dateien werden
+mit GitHub Pages veröffentlicht. Die Schulgemeinden verwenden dieselben Namens- und
+URL-Spalten für den Linkchecker, aber keine Codes der politischen Gemeinden.
+Für den Bestand der Schulgemeinden das in der README verlinkte kantonale Verzeichnis
+verwenden; das Schuladressenverzeichnis enthält auch Schulen von Einheitsgemeinden
+und teilweise frühere Namen und Domains.

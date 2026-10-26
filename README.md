@@ -2,8 +2,11 @@
 
 **Dies ist ein Test ohne jegliche Gewähr und keine offizielle Publikation.**
 
-Linksammlung zu Websites und Rechtssammlungen aller 160 Zürcher Gemeinden.
+Linksammlung zu Websites und Rechtssammlungen der 160 politischen Gemeinden und
+60 selbstständigen Schulgemeinden im Kanton Zürich.
 Die Gemeindenamen führen zur jeweiligen Homepage, «Erlasse» zur kommunalen Rechtssammlung.
+
+## Politische Gemeinden
 
 Links geprüft am 23. Oktober 2026.
 
@@ -169,3 +172,89 @@ Links geprüft am 23. Oktober 2026.
 | [Zollikon](https://www.zollikon.ch/)                        | [Erlasse](https://www.zollikon.ch/gesetzessammlung)                                                                                                      |
 | [Zumikon](https://www.zumikon.ch/)                          | [Erlasse](https://www.zumikon.ch/gesetzeskapitel)                                                                                                        |
 | [Zürich](https://www.stadt-zuerich.ch/de.html)              | [Erlasse](https://www.stadt-zuerich.ch/de/politik-und-verwaltung/politik-und-recht/amtliche-sammlung.html)                                               |
+
+## Schulgemeinden
+
+Grundlage ist das [Verzeichnis der Gemeinden des Kantons Zürich](https://www.zh.ch/content/dam/zhweb/bilder-dokumente/themen/politik-staat/gemeinden/gemeindeverzeichnis.pdf)
+des Gemeindeamts mit Stand vom 1. Juli 2026. Es nennt 60 selbstständige Schulgemeinden,
+davon 24 Primarschul-, 28 Sekundarschul- und 8 Volksschulgemeinden.
+Schulen innerhalb einer politischen Gemeinde sind hier nicht zusätzlich aufgeführt.
+
+Homepages und Rechtssammlungen recherchiert am 26. Oktober 2026, ausgehend vom
+[kantonalen Schuladressenverzeichnis](https://www.zh.ch/de/bildung/schulen.html)
+und den Websites der Schulen.
+«Erlasse» führt zur systematischen Rechtssammlung oder zur entsprechenden Sammlung
+von Rechtsgrundlagen und Reglementen. Bei Obfelden-Ottenbach führt die Downloadseite
+zur Rechtssammlung; Laufen-Uhwiesen veröffentlicht sie in einem öffentlich verlinkten
+SharePoint-Ordner. Die Dokumente von Höri und Stadel sowie die Website der Sekundarschule
+Dielsdorf werden mit JavaScript geladen.
+
+Die automatische HTTP-Prüfung erreichte 106 von 120 Links. Bei Andelfingen (Primar),
+Dänikon-Hüttikon, Wettswil am Albis, Bonstetten, Seuzach, Uster und Unteres Rafzerfeld
+antworteten beide Links mit HTTP 403; die Adressen wurden anhand der veröffentlichten
+Schulseiten und ihrer Navigation bestätigt.
+
+[Schulgemeinden als CSV herunterladen](data/school-municipalities-canton-zurich.csv).
+
+| Schulgemeinde | Rechtssammlung |
+| --- | --- |
+| [Primarschulgemeinde Andelfingen](https://www.primarschule-andelfingen.ch/) | [Erlasse](https://www.primarschule-andelfingen.ch/rechtssammlung.html/490) |
+| [Primarschulgemeinde Bachs](https://www.primarschule-bachs.ch/) | [Erlasse](https://www.primarschule-bachs.ch/gesetzessammlung) |
+| [Primarschulgemeinde Benken](https://www.schulebenken.ch/) | [Erlasse](https://www.schulebenken.ch/reglemente-spf) |
+| [Primarschulgemeinde Boppelsen](https://www.schuleboppelsen.ch/) | [Erlasse](https://www.schuleboppelsen.ch/infos/systematische-rechtssammlung) |
+| [Primarschulgemeinde Dachsen](https://primarschuledachsen.ch/) | [Erlasse](https://primarschuledachsen.ch/systematische-rechtssammlung/) |
+| [Primarschulgemeinde Dägerlen](https://primarschule-daegerlen.ch/) | [Erlasse](https://primarschule-daegerlen.ch/systematische-rechtssammlung/) |
+| [Primarschulgemeinde Dänikon-Hüttikon](https://www.schule-rotflue.ch/) | [Erlasse](https://www.schule-rotflue.ch/organisation/systematische-rechtssammlung.html/597) |
+| [Primarschulgemeinde Dielsdorf](https://www.primarschule-dielsdorf.ch/) | [Erlasse](https://www.primarschule-dielsdorf.ch/rechtssammlung) |
+| [Primarschulgemeinde Elgg](https://www.schule-elgg.ch/) | [Erlasse](https://www.schule-elgg.ch/eltern-abc/#s) |
+| [Primarschulgemeinde Ellikon an der Thur](https://www.schule-ellikon.ch/) | [Erlasse](https://www.schule-ellikon.ch/kopie-von-publikationen-der-schulpflege) |
+| [Primarschulgemeinde Höri](https://www.schulehoeri.ch/) | [Erlasse](https://www.schulehoeri.ch/organisation/schulpflege/rechtsgrundlagen/p-183568/) |
+| [Primarschulgemeinde Laufen-Uhwiesen](https://www.ps-uhwiesen.ch/) | [Erlasse](https://psuhwiesen.sharepoint.com/:f:/s/Dokumente-extern/Eo0miVv0hqhJuIGqpsxMtxYB1iTTSvojD2xn-jhlmUSehQ?e=gmdfPv) |
+| [Primarschulgemeinde Marthalen](https://www.primarschule-marthalen.ch/) | [Erlasse](https://www.primarschule-marthalen.ch/downloads-rechtssammlung) |
+| [Primarschulgemeinde Maschwanden](https://ps-maschwanden.ch/) | [Erlasse](https://ps-maschwanden.ch/systematische-rechtssammlung/) |
+| [Primarschulgemeinde Oetwil-Geroldswil](https://www.psog.ch/) | [Erlasse](https://www.psog.ch/organisation/systematische-rechtssammlung/) |
+| [Primarschulgemeinde Ossingen](https://www.ps-ossingen.ch/) | [Erlasse](https://www.ps-ossingen.ch/dokumente/reglemente-raumbenutzung) |
+| [Primarschulgemeinde Regensberg](https://schule-regensberg.ch/) | [Erlasse](https://schule-regensberg.ch/downloads/) |
+| [Primarschulgemeinde Schwerzenbach](https://www.schule-schwerzenbach.ch/) | [Erlasse](https://www.schule-schwerzenbach.ch/organisation/systematische-rechtssammlung/p-325/) |
+| [Primarschulgemeinde Stadel](https://www.primarschule-stadel.ch/) | [Erlasse](https://www.primarschule-stadel.ch/aktuelles/systematische-rechtssammlung/p-771/) |
+| [Primarschulgemeinde Trüllikon](https://www.schule-truellikon.ch/) | [Erlasse](https://www.schule-truellikon.ch/links-und-download/systematische-rechtssammlung/p-122/) |
+| [Primarschulgemeinde Truttikon](https://pstruttikon.ch/) | [Erlasse](https://pstruttikon.ch/reglemente-downloads.html) |
+| [Primarschulgemeinde Turbenthal](https://www.ps-turbenthal.ch/) | [Erlasse](https://www.ps-turbenthal.ch/informationen/reglemente/) |
+| [Primarschulgemeinde Wettswil am Albis](https://www.schulewettswil.ch/) | [Erlasse](https://www.schulewettswil.ch/organisation/schulpflege/systematische-rechtssammlung.html/591) |
+| [Primarschulgemeinde Wila](https://www.pswila.ch/) | [Erlasse](https://www.pswila.ch/organisation/systematische-rechtssammlung/) |
+| [Sekundarschulgemeinde Affoltern am Albis-Aeugst am Albis](https://www.osa.ch/) | [Erlasse](https://www.osa.ch/systematische-rechtssammlung.html) |
+| [Sekundarschulgemeinde Andelfingen](https://www.sek-andelfingen.ch/) | [Erlasse](https://www.sek-andelfingen.ch/schule/schulgemeinde/rechtssammlung/) |
+| [Sekundarschulgemeinde Birmensdorf-Aesch](https://www.sekbirmensdorfaesch.ch/) | [Erlasse](https://www.sekbirmensdorfaesch.ch/informationen/rechtssammlung/p-136/) |
+| [Sekundarschulgemeinde Bonstetten](https://www.sek-bonstetten.ch/) | [Erlasse](https://www.sek-bonstetten.ch/unsere-schule/rechtssammlung.html/43) |
+| [Sekundarschulgemeinde Bülach](https://www.sekbuelach.ch/) | [Erlasse](https://www.sekbuelach.ch/schulverwaltung/systematische-rechtssammlung/p-5984/) |
+| [Sekundarschulgemeinde Dielsdorf](https://sekdielsdorf.ch/de/sek/willkommen) | [Erlasse](https://sekdielsdorf.ch/de/onlineschalter/systematische-rechtssammlung) |
+| [Sekundarschulgemeinde Dübendorf-Schwerzenbach](https://www.sek-ds.ch/) | [Erlasse](https://www.sek-ds.ch/informationen/systematische-rechtssammlung/p-80/) |
+| [Sekundarschulgemeinde Elgg](https://www.sek-elgg.ch/) | [Erlasse](https://www.sek-elgg.ch/systematische-rechtssammlung.htm) |
+| [Sekundarschulgemeinde Embrach](https://www.sek-embra.ch/) | [Erlasse](https://www.sek-embra.ch/rechtssammlung) |
+| [Sekundarschulgemeinde Hausen am Albis](https://www.sekhausen.ch/) | [Erlasse](https://www.sekhausen.ch/rechtssammlung) |
+| [Sekundarschulgemeinde Knonau-Maschwanden-Mettmenstetten](https://www.sekmaettmi.ch/) | [Erlasse](https://www.sekmaettmi.ch/service/rechtssammlung/p-64/) |
+| [Sekundarschulgemeinde Kreis Marthalen](https://skmarthalen.ch/) | [Erlasse](https://skmarthalen.ch/systematische-rechtssammlung/) |
+| [Sekundarschulgemeinde Kreis Uhwiesen](https://www.seku.ch/) | [Erlasse](https://www.seku.ch/rechtssammlung-organisationshandbuch.htm) |
+| [Sekundarschulgemeinde Nänikon-Greifensee](https://www.oswueri.ch/) | [Erlasse](https://www.oswueri.ch/informationen/rechtssammlung/p-85/) |
+| [Sekundarschulgemeinde Niederhasli-Niederglatt](https://www.eduzis.ch/) | [Erlasse](https://www.eduzis.ch/wiki/) |
+| [Sekundarschulgemeinde Obfelden-Ottenbach](https://sek-obfelden.ch/) | [Erlasse](https://sek-obfelden.ch/downloads) |
+| [Sekundarschulgemeinde Ossingen-Truttikon](https://sekossingen.ch/) | [Erlasse](https://sekossingen.ch/downloads/) |
+| [Sekundarschulgemeinde Regensdorf-Buchs-Dällikon](https://www.sek-regensdorf.ch/) | [Erlasse](https://www.sek-regensdorf.ch/unsere-schule/publikationen/systematische-rechtssammlung/p-113/) |
+| [Sekundarschulgemeinde Rickenbach](https://www.sekrickenbach.ch/) | [Erlasse](https://www.sekrickenbach.ch/web/cms.php?open=SystematischeRechtssammlung) |
+| [Sekundarschulgemeinde Rümlang-Oberglatt](https://www.sekro.ch/) | [Erlasse](https://www.sekro.ch/schulorganisation.htm) |
+| [Sekundarschulgemeinde Seuzach](https://www.sekseuzach.ch/) | [Erlasse](https://www.sekseuzach.ch/organisation/systematische-rechtssammlung.html/338) |
+| [Sekundarschulgemeinde Stadel](https://www.sek-stadel.ch/) | [Erlasse](https://www.sek-stadel.ch/aktuell/download/p-44/) |
+| [Sekundarschulgemeinde Turbenthal-Wildberg](https://www.sektw.ch/) | [Erlasse](https://www.sektw.ch/team/schulbehoerde/systematische-rechtssammlung/p-200/) |
+| [Sekundarschulgemeinde Unteres Furttal](https://www.sekuf.ch/) | [Erlasse](https://www.sekuf.ch/systematische-rechssammlungen) |
+| [Sekundarschulgemeinde Uster](https://www.sekuster.ch/) | [Erlasse](https://www.sekuster.ch/behoerde-und-verwaltung/systematische-rechtssammlung.html/621) |
+| [Sekundarschulgemeinde Wädenswil](https://www.oswaedenswil.ch/) | [Erlasse](https://www.oswaedenswil.ch/oberstufenschulgemeinde/systematische-rechtssammlung) |
+| [Sekundarschulgemeinde Weiningen](https://www.oberstufeweiningen.ch/) | [Erlasse](https://www.oberstufeweiningen.ch/Systematische-Rechtssammlung/PKj2k/) |
+| [Sekundarschulgemeinde Wila](https://www.sekwila.ch/) | [Erlasse](https://www.sekwila.ch/organisation/systematische-rechtssammlung) |
+| [Volksschulgemeinde Dietlikon](https://www.schule-dietlikon.ch/) | [Erlasse](https://www.schule-dietlikon.ch/organisation/rechtssammlung/p-115/) |
+| [Volksschulgemeinde Elsau-Schlatt](https://www.elsauschlatt.ch/) | [Erlasse](https://www.elsauschlatt.ch/infos/downloads/systematische-rechtssammlung/p-184133/) |
+| [Volksschulgemeinde Flaachtal](https://www.schuleflaachtal.ch/) | [Erlasse](https://www.schuleflaachtal.ch/info-center/publikationen/rechtssammlung/p-677/) |
+| [Volksschulgemeinde Hittnau](https://www.schulehittnau.ch/) | [Erlasse](https://www.schulehittnau.ch/rechtssammlung) |
+| [Volksschulgemeinde Rorbas-Freienstein-Teufen](https://www.schule-rft.ch/) | [Erlasse](https://www.schule-rft.ch/index.php?page_request=145&ordner_id=61) |
+| [Volksschulgemeinde Unteres Rafzerfeld](https://www.schule-ur.ch/) | [Erlasse](https://www.schule-ur.ch/online-schalter/dokumente-reglemente.html/126) |
+| [Volksschulgemeinde Wehntal](https://schulewehntal.ch/home.html) | [Erlasse](https://schulewehntal.ch/organisation/systematische-rechtssammlung.html) |
+| [Volksschulgemeinde Wiesendangen](https://www.swibe.ch/) | [Erlasse](https://www.swibe.ch/web/cms.php?open=SystematischeRechtssammlung) |

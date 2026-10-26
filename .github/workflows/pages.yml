@@ -6,6 +6,7 @@ on:
     paths:
       - README.md
       - data/municipalities-canton-zurich.csv
+      - data/school-municipalities-canton-zurich.csv
       - .github/workflows/pages.yml
   workflow_dispatch:
 
@@ -40,6 +41,7 @@ jobs:
           { printf '%s\n' '---' 'layout: default' '---'; cat README.md; } > _pages/index.md
           printf 'theme: jekyll-theme-primer\nbaseurl: "%s"\n' "$BASE_PATH" > _pages/_config.yml
           cp data/municipalities-canton-zurich.csv _pages/data/
+          cp data/school-municipalities-canton-zurich.csv _pages/data/
 
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@44a6e6beabd48582f863aeeb6cb2151cc1716697 # v1.0.13

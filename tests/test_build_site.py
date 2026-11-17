@@ -161,3 +161,28 @@ def test_build_rejects_unsafe_urls_before_writing(source: Path, tmp_path: Path) 
     with pytest.raises(ValueError):
         build_site(source, output)
     assert not output.exists()
+
+
+@pytest.mark.parametrize(
+    ("entry", "message"),
+    [
+        ("", "Municipality CSV must not be empty"),
+        (
+            "Unbekannte Schulgemeinde,https://example.com/,https://example.com/laws\n",
+            "Unknown school",
+        ),
+    ],
+)
+def test_invalid_school_data_preserves_existing_site(
+    source: Path, tmp_path: Path, entry: str, message: str
+) -> None:
+    (source / "data" / "school-municipalities-canton-zurich.csv").write_text(
+        "gemeinde_name,gemeinde_website_url,erlasse_url\n" + entry, encoding="utf-8"
+    )
+    output = tmp_path / "output"
+    output.mkdir()
+    (output / "index.html").write_text("previous site", encoding="utf-8")
+    with pytest.raises(ValueError, match=message):
+        build_site(source, output)
+    assert (output / "index.html").read_text(encoding="utf-8") == "previous site"
+    assert list(output.iterdir()) == [output / "index.html"]

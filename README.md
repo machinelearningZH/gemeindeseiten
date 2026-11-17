@@ -36,6 +36,8 @@ Sie ersetzt keine manuelle Prüfung und ändert die historischen Recherchetermin
 
 ## Entwicklung und Veröffentlichung
 
+Voraussetzungen: Python ab 3.13, uv und für die JavaScript-Tests Node.js.
+
 ```sh
 uv sync --locked
 uv run build-site

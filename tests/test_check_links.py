@@ -91,6 +91,23 @@ def test_http_status_and_redirects(
     assert check_links.check_url(website + path, client) == expected
 
 
+def test_check_does_not_read_response_body_and_closes_stream() -> None:
+    class UnreadBody(httpx.SyncByteStream):
+        closed = False
+
+        def __iter__(self) -> Iterator[bytes]:
+            raise AssertionError("Availability checks must not download the response body")
+
+        def close(self) -> None:
+            self.closed = True
+
+    body = UnreadBody()
+    transport = httpx.MockTransport(lambda request: httpx.Response(200, stream=body))
+    with httpx.Client(transport=transport) as client:
+        assert check_links.check_url("https://example.com/large.pdf", client) == (True, "HTTP 200")
+        assert body.closed
+
+
 @pytest.mark.parametrize("url", ["", "not-a-url", "file:///etc/passwd"])
 def test_invalid_urls_are_rejected(client: httpx.Client, url: str) -> None:
     assert check_links.check_url(url, client) == (False, "Invalid HTTP URL")
@@ -171,10 +188,19 @@ def test_empty_or_malformed_csv_fails_before_requests(
         {"workers": 0},
         {"workers": True},
         {"user_agent": ""},
+        pytest.param({"user_agent": "MunicipalityLinkChecker Zürich"}, id="non_ascii_user_agent"),
         {"unknown": 1},
     ],
 )
-def test_invalid_configuration_is_rejected(config_path: Path, invalid: dict[str, object]) -> None:
+def test_invalid_configuration_is_rejected(
+    config_path: Path, invalid: dict[str, object], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    config_path.with_name("municipalities.csv").write_text(
+        "gemeinde_name,gemeinde_website_url,erlasse_url\n"
+        "Example,https://example.com/,https://example.com/laws\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(check_links, "check_url", lambda *args: pytest.fail("Unexpected request"))
     values = yaml.safe_load(config_path.read_text())
     values.update(invalid)
     config_path.write_text(yaml.safe_dump(values), encoding="utf-8")
@@ -356,20 +382,48 @@ def test_invalid_previous_report_fails_before_requests(
     assert "secret invalid data" not in result.output
 
 
-def test_report_cannot_overwrite_inputs(config_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+@pytest.mark.parametrize("option", ["--report", "--summary"])
+@pytest.mark.parametrize("target", ["config.yaml", "municipalities.csv", "previous.json"])
+def test_reports_cannot_overwrite_inputs(
+    config_path: Path, monkeypatch: pytest.MonkeyPatch, option: str, target: str
+) -> None:
     csv_path = config_path.with_name("municipalities.csv")
     content = (
         "gemeinde_name,gemeinde_website_url,erlasse_url\n"
         "Example,https://example.com/,https://example.com/laws\n"
     )
     csv_path.write_text(content, encoding="utf-8")
+    previous = config_path.with_name("previous.json")
+    previous.write_text('{"checked_at":"2026-11-09T07:00:00Z","results":[]}', encoding="utf-8")
+    output = config_path.with_name(target)
+    original = output.read_bytes()
     monkeypatch.setattr(check_links, "check_url", lambda *args: pytest.fail("Unexpected request"))
     result = runner.invoke(
-        check_links.app, ["--config", str(config_path), "--report", str(csv_path)]
+        check_links.app,
+        ["--config", str(config_path), "--previous-report", str(previous), option, str(output)],
     )
     assert result.exit_code == 2
     assert "Report outputs must differ" in result.output
-    assert csv_path.read_text(encoding="utf-8") == content
+    assert output.read_bytes() == original
+
+
+def test_report_outputs_cannot_overwrite_each_other(
+    config_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    config_path.with_name("municipalities.csv").write_text(
+        "gemeinde_name,gemeinde_website_url,erlasse_url\n"
+        "Example,https://example.com/,https://example.com/laws\n",
+        encoding="utf-8",
+    )
+    output = config_path.with_name("report.json")
+    monkeypatch.setattr(check_links, "check_url", lambda *args: pytest.fail("Unexpected request"))
+    result = runner.invoke(
+        check_links.app,
+        ["--config", str(config_path), "--report", str(output), "--summary", str(output)],
+    )
+    assert result.exit_code == 2
+    assert "Report outputs must differ" in result.output
+    assert not output.exists()
 
 
 def test_report_write_failure_is_an_operational_error(

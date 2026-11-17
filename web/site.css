@@ -35,8 +35,7 @@ table { width: 100%; border-collapse: collapse; table-layout: fixed; }
 th { text-align: left; }
 thead th { font-size: .9rem; color: #425b6b; border-bottom: 2px solid #8ba1af; }
 th, td { padding: .9rem .8rem; vertical-align: top; overflow-wrap: anywhere; }
-th:first-child { width: 56%; }
-th:last-child { width: 20%; }
+thead th:first-child { width: 65%; }
 tbody th, td { border-bottom: 1px solid #dce4e8; }
 tbody th { font-weight: 550; }
 tbody tr:hover { background: #f5f8fa; }
@@ -62,9 +61,9 @@ footer p { margin: .5rem 0; }
   button { margin-top: 0; }
   table, tbody { display: block; }
   thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
-  tbody tr { display: grid; grid-template-columns: 1fr 1fr; padding-block: .8rem; border-bottom: 1px solid #dce4e8; }
+  tbody tr { display: grid; padding-block: .8rem; border-bottom: 1px solid #dce4e8; }
   tbody th, td { width: auto; padding: .25rem .35rem; border: 0; }
-  tbody th:first-child { grid-column: 1 / -1; width: auto; overflow-wrap: normal; }
+  tbody th:first-child { width: auto; overflow-wrap: normal; }
   td { font-size: .9rem; }
   .review-dates { grid-template-columns: 1fr; gap: 0; }
 }

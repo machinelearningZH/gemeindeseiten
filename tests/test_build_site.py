@@ -1,7 +1,6 @@
 import csv
 from html.parser import HTMLParser
 from pathlib import Path
-from urllib.parse import parse_qs, urlsplit
 
 import pytest
 
@@ -81,20 +80,32 @@ def source(tmp_path: Path) -> Path:
     return source
 
 
-def test_build_escapes_content_and_prefills_feedback(source: Path, tmp_path: Path) -> None:
+def test_build_escapes_content_without_per_entry_feedback(source: Path, tmp_path: Path) -> None:
     output = tmp_path / "output"
     build_site(source, output)
     html = (output / "index.html").read_text(encoding="utf-8")
     assert "<script>" not in html
     assert "A &lt;script&gt; &amp; &quot;B&quot;" in html
     page = Page(html)
+    assert len(page.links) == 4
+    assert all(not (link.get("href") or "").startswith("mailto:") for link in page.links)
+    assert any(
+        link.get("href") == "https://example.com/laws?a=1&b=2#chapter" for link in page.links
+    )
+
+
+def test_general_feedback_link_is_in_header_only(tmp_path: Path) -> None:
+    build_site(ROOT, tmp_path)
+    html = (tmp_path / "index.html").read_text(encoding="utf-8")
+    header = Page(html.split("</header>", 1)[0])
     feedback = [
-        link["href"] for link in page.links if (link.get("href") or "").startswith("mailto:")
+        link
+        for link in Page(html).links
+        if (link.get("href") or "").startswith("mailto:") and "subject=" in link["href"]
     ]
-    assert len(feedback) == 2
-    query = parse_qs(urlsplit(feedback[0]).query)
-    assert 'A <script> & "B"' in query["subject"][0]
-    assert "https://example.com/laws?a=1&b=2#chapter" in query["body"][0]
+    assert len(feedback) == 1
+    assert feedback[0] in header.links
+    assert "Rückmeldung</th>" not in html
 
 
 def test_build_rejects_unsafe_urls_before_writing(source: Path, tmp_path: Path) -> None:

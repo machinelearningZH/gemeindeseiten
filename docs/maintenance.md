@@ -55,7 +55,8 @@ und lädt die Antwortinhalte nicht herunter. Ergebnisse erscheinen nach Abschlus
 der jeweiligen Anfrage; die Zusammenfassung nennt Parallelität, Timeout und
 Laufzeit. CSV-Pfad, Timeout, Parallelität und User-Agent stehen in `config.yaml`
 (Standard: acht parallele Anfragen, 20 Sekunden Timeout). Relative CSV-Pfade
-beziehen sich auf das Verzeichnis der Konfiguration.
+beziehen sich auf das Verzeichnis der Konfiguration. Für den User-Agent nur
+ASCII-Zeichen verwenden.
 
 Exit-Code `0`: alle Links erreichbar; `1`: mindestens eine Prüfung fehlgeschlagen,
 auch bei HTTP 403 oder 429; `2`: ungültige Eingabe oder nicht schreibbarer Bericht.

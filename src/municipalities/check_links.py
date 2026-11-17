@@ -34,7 +34,7 @@ class Settings(BaseModel):
     csv_path: Path
     timeout: Annotated[float, Field(gt=0, allow_inf_nan=False, strict=True)]
     workers: Annotated[int, Field(gt=0, le=32, strict=True)]
-    user_agent: Annotated[str, Field(min_length=1, pattern=r"^[^\r\n]+$")]
+    user_agent: Annotated[str, Field(min_length=1, pattern=r"^[\x20-\x7E]+$")]
 
 
 class LinkResult(BaseModel):

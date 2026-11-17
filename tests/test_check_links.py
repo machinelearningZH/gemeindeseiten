@@ -189,6 +189,8 @@ def test_empty_or_malformed_csv_fails_before_requests(
         {"workers": True},
         {"user_agent": ""},
         pytest.param({"user_agent": "MunicipalityLinkChecker Zürich"}, id="non_ascii_user_agent"),
+        pytest.param({"user_agent": "test\r\nInjected: header"}, id="newline_user_agent"),
+        pytest.param({"user_agent": "test\x00checker"}, id="control_character_user_agent"),
         {"unknown": 1},
     ],
 )

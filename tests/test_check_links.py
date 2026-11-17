@@ -18,6 +18,32 @@ from municipalities import check_links
 runner = CliRunner()
 
 
+def test_optional_document_links_are_checked_and_reported(
+    config_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    config_path.with_name("municipalities.csv").write_text(
+        "gemeinde_name,gemeinde_website_url,erlasse_url,gemeindeordnung_url,personalrecht_url\n"
+        "Example,https://example.com/,https://example.com/laws,"
+        "https://example.com/constitution,https://example.com/personnel\n"
+        "Other,https://other.example/,https://other.example/laws,, \n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(check_links, "check_url", lambda *args: (True, "HTTP 200"))
+    report = config_path.with_name("report.json")
+    result = runner.invoke(check_links.app, ["--config", str(config_path), "--report", str(report)])
+    assert result.exit_code == 0, result.output
+    records = json.loads(report.read_text(encoding="utf-8"))["results"]
+    assert len(records) == 6
+    assert {
+        (row["column"], row["url"])
+        for row in records
+        if row["column"] not in check_links.URL_COLUMNS
+    } == {
+        ("gemeindeordnung_url", "https://example.com/constitution"),
+        ("personalrecht_url", "https://example.com/personnel"),
+    }
+
+
 @pytest.fixture
 def client() -> Iterator[httpx.Client]:
     with httpx.Client(

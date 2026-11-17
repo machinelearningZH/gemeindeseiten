@@ -20,6 +20,7 @@ from rich.text import Text
 
 
 URL_COLUMNS = ("gemeinde_website_url", "erlasse_url")
+DOCUMENT_URL_COLUMNS = ("gemeindeordnung_url", "personalrecht_url")
 app = typer.Typer(add_completion=False, pretty_exceptions_enable=False)
 console = Console()
 logger = logging.getLogger(__name__)
@@ -42,7 +43,9 @@ class LinkResult(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     name: str
-    column: Literal["gemeinde_website_url", "erlasse_url"]
+    column: Literal[
+        "gemeinde_website_url", "erlasse_url", "gemeindeordnung_url", "personalrecht_url"
+    ]
     url: str
     status: Literal["reachable", "blocked", "needs_review"]
     detail: str
@@ -136,6 +139,10 @@ def load_links(csv_path: Path) -> list[tuple[str, str, str]]:
                     f"CSV row {reader.line_num} has missing municipality or URL values."
                 )
             links.extend((row["gemeinde_name"], column, row[column]) for column in URL_COLUMNS)
+            for column in DOCUMENT_URL_COLUMNS:
+                url = (row.get(column) or "").strip()
+                if url:
+                    links.append((row["gemeinde_name"], column, url))
     if not links:
         raise ValueError("No URLs found.")
     return links
@@ -182,7 +189,7 @@ def main(
         Path | None, typer.Option(help="Write a Markdown failure summary.", dir_okay=False)
     ] = None,
 ) -> None:
-    """Check both URL columns. Exit 1 for unavailable links or 2 for invalid input."""
+    """Check website, collection and populated document URLs. Exit 1 for failures, 2 for input errors."""
     handler = logging.StreamHandler()
     handler.setFormatter(JsonFormatter())
     logging.basicConfig(level=logging.WARNING, handlers=[handler])

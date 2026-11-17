@@ -36,6 +36,11 @@ Essential insights and (non obvious) findings gathered during coding work.
   never an assertion that a failure is new. HTTP 403/429 are blocked checks; HTTP
   success says nothing about content. Builds and automated checks do not advance
   the manual research dates shown on the site.
+- The document pilot adds two optional political-municipality CSV fields, both covered
+  by the weekly checker. Blank cells mean not captured, not absent. Use official detail
+  pages where available; Horgen and Wetzikon publish these links directly as PDFs,
+  which may need replacing when new files are published. Kloten and Winterthur use
+  JavaScript-based LexWork law pages. No source or review-date fields are displayed.
 
 ## 2026-10-26: eMudhra/emSign certificate update
 

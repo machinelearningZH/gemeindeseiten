@@ -10,6 +10,7 @@ CSV_PATH = Path(__file__).parent.parent / "data" / "municipalities-canton-zurich
 SCHOOL_CSV_PATH = CSV_PATH.with_name("school-municipalities-canton-zurich.csv")
 COLUMNS = ["gebietstyp_code", "gemeinde_code", "gemeinde_name"]
 URL_COLUMNS = ["gemeinde_website_url", "erlasse_url"]
+DOCUMENT_COLUMNS = ["gemeindeordnung_url", "personalrecht_url"]
 
 
 @pytest.fixture(scope="module")
@@ -20,21 +21,46 @@ def rows() -> list[dict[str, str]]:
 
 def test_csv_has_expected_columns() -> None:
     with CSV_PATH.open(encoding="utf-8", newline="") as file:
-        assert next(csv.reader(file)) == COLUMNS + URL_COLUMNS
+        assert next(csv.reader(file)) == COLUMNS + URL_COLUMNS + DOCUMENT_COLUMNS
 
 
-def test_csv_has_no_empty_values(rows: list[dict[str, str]]) -> None:
+def test_csv_has_no_empty_required_values(rows: list[dict[str, str]]) -> None:
     assert rows
-    assert all(all(value.strip() for value in row.values()) for row in rows)
+    assert all(all(row[column].strip() for column in COLUMNS + URL_COLUMNS) for row in rows)
 
 
-@pytest.mark.parametrize("column", URL_COLUMNS)
+@pytest.mark.parametrize("column", URL_COLUMNS + DOCUMENT_COLUMNS)
 def test_municipality_links_are_valid_https_urls(rows: list[dict[str, str]], column: str) -> None:
     for row in rows:
         url = row[column]
+        if column in DOCUMENT_COLUMNS and not url:
+            continue
         parsed = urlsplit(url)
         assert parsed.scheme == "https" and parsed.hostname, row["gemeinde_name"]
         assert not any(character.isspace() for character in url), row["gemeinde_name"]
+
+
+def test_document_pilot_covers_four_original_and_ten_additional_municipalities(
+    rows: list[dict[str, str]],
+) -> None:
+    expected = {
+        "Adliswil",
+        "Uster",
+        "Zürich",
+        "Winterthur",
+        "Meilen",
+        "Dietikon",
+        "Dübendorf",
+        "Wetzikon (ZH)",
+        "Horgen",
+        "Wädenswil",
+        "Thalwil",
+        "Kloten",
+        "Wallisellen",
+        "Illnau-Effretikon",
+    }
+    for column in DOCUMENT_COLUMNS:
+        assert {row["gemeinde_name"] for row in rows if row[column]} == expected
 
 
 @pytest.mark.parametrize("column", ["gemeinde_code", "gemeinde_name"])

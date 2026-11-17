@@ -17,14 +17,12 @@ Fassung der Zürcher Gesetzessammlung (ZH-Lex).
 Originalpublikationen des Kantons und der Gemeinden.** Kontakt und Pflege: Team Data, Amt für
 Statistik und Daten Kanton Zürich, [datashop@statistik.zh.ch](mailto:datashop@statistik.zh.ch).
 
-## Daten und Prüfstand
+## Daten und Pflege
 
 Die CSV-Dateien sind die verbindliche Datenquelle für die automatisch erzeugte Seite:
 
-- [Politische Gemeinden](data/municipalities-canton-zurich.csv): manuell recherchiert
-  und zuletzt dokumentiert automatisch geprüft am 23. Oktober 2026.
-- [Schulgemeinden](data/school-municipalities-canton-zurich.csv): manuell recherchiert
-  und zuletzt dokumentiert automatisch geprüft am 26. Oktober 2026.
+- [Politische Gemeinden](data/municipalities-canton-zurich.csv)
+- [Schulgemeinden](data/school-municipalities-canton-zurich.csv)
 
 Grundlage für die Schulgemeinden ist das
 [Gemeindeverzeichnis des Gemeindeamts](https://www.zh.ch/content/dam/zhweb/bilder-dokumente/themen/politik-staat/gemeinden/gemeindeverzeichnis.pdf)
@@ -33,14 +31,15 @@ Schulen innerhalb einer politischen Gemeinde sind nicht zusätzlich aufgeführt.
 Adressen wurden über das [kantonale Schuladressenverzeichnis](https://www.zh.ch/de/bildung/schulen.html)
 und die Websites der Schulen recherchiert.
 
+Die Website nennt die manuellen Prüfstände unter «Quellen und Prüfstand».
 [Wöchentliche HTTP-Prüfberichte](https://github.com/machinelearningZH/gemeindeseiten/actions/workflows/check-links.yml)
-unterscheiden erreichbare Links, blockierte automatische Prüfungen und Prüfbedarf.
-Eine erfolgreiche HTTP-Prüfung bestätigt die Erreichbarkeit, nicht den Inhalt.
-Sie ersetzt keine manuelle Prüfung und ändert die historischen Recherchetermine nicht.
+zeigen erreichbare Links, blockierte Prüfungen und Prüfbedarf. Sie bestätigen keine
+inhaltliche oder rechtliche Aktualität und ändern weder Daten noch Website.
 
 ## Entwicklung und Veröffentlichung
 
-Voraussetzungen: Python ab 3.13, uv und für die JavaScript-Tests Node.js.
+Voraussetzungen: Python ab 3.13, uv, Make und Node.js für die JavaScript-Tests.
+Die Befehle im Repository-Verzeichnis ausführen:
 
 ```sh
 uv sync --locked
@@ -48,12 +47,15 @@ uv run build-site
 make check
 ```
 
-Der Build erzeugt ausschliesslich öffentliche Dateien in `_site/`. HTML, CSS und
-JavaScript liegen unter `web/`. Die Seite funktioniert ohne Serveranwendung und
-bleibt mit GitHub Pages kompatibel; ohne JavaScript wird die gesamte Liste angezeigt.
-Nach dem Merge auf `main` veröffentlicht der Pages-Workflow die erzeugte Seite und
-beide CSV-Dateien. Auf dem Feature-Branch wird nichts veröffentlicht.
+Der Build erzeugt die statische Seite und beide CSV-Downloads in `_site/` aus
+`data/` und `web/`. Suche und Filter laufen im Browser; ohne JavaScript bleibt die
+gesamte Liste sichtbar.
 
-Details zu Datenpflege, Linkprüfung und Pages-Einstellungen:
-[Wartung](docs/maintenance.md). Umsetzung des Reviews und bewusst offene Erweiterungen:
-[Review-Nachverfolgung](docs/review-follow-up.md).
+Der [Pages-Workflow](.github/workflows/pages.yml) veröffentlicht `_site/` bei
+relevanten Änderungen auf `main` oder nach manuellem Start auf `main`.
+Änderungen nur an Markdown-Dokumentation lösen keine Veröffentlichung aus.
+Die erzeugten Dateien werden nicht eingecheckt.
+
+Details zu Datenpflege, Linkprüfung und Veröffentlichung:
+[Wartung](docs/maintenance.md). Besondere Prüfhinweise stehen in [NOTES.md](NOTES.md),
+offene Entscheidungen in [PLAN.md](PLAN.md).

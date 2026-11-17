@@ -1,3 +1,5 @@
+# Wartung
+
 ## Daten und Seite pflegen
 
 Die beiden CSV-Dateien unter `data/` sind die einzige Quelle für die Einträge:
@@ -13,9 +15,9 @@ Die beiden CSV-Dateien unter `data/` sind die einzige Quelle für die Einträge:
 
 Einträge nur in der jeweiligen CSV ändern. `uv run build-site` erzeugt daraus
 `_site/index.html`, CSS, JavaScript, beide CSV-Downloads und `.nojekyll`.
-Es müssen keine Markdown-Tabellen nachgeführt werden. Die Tests prüfen, dass alle
-220 Einträge und ihre Links im erzeugten Verzeichnis enthalten sind. Bei einer
-belegten Bestandsänderung auch die entsprechenden Bestandserwartungen anpassen.
+Die Tests prüfen, dass alle 220 Einträge und ihre Links im erzeugten Verzeichnis
+enthalten sind. Bei einer belegten Bestandsänderung auch die entsprechenden
+Bestandserwartungen anpassen.
 
 Die Vorlage und die kleinen Browserdateien liegen unter `web/`. Alle lokalen URLs
 sind relativ; die Seite funktioniert unter `/gemeindeseiten/` und unter einem
@@ -23,11 +25,10 @@ anderen Pages-Basispfad. Suche und Filter laufen ausschliesslich im Browser;
 ohne JavaScript bleibt die vollständige Tabelle zugänglich. Es gibt keine
 zusätzlichen Dienste, Schriftanbieter oder Analysedienste.
 
-Die manuellen Recherchetermine und letzten dokumentierten HTTP-Prüfungen stehen
-getrennt in `web/index.html` und zusammengefasst in der README. Nur nach einer
-tatsächlichen Prüfung ändern; ein Build ist keine Prüfung. Wöchentliche Berichte
-führen ihren eigenen UTC-Zeitstempel und aktualisieren diese historischen Angaben
-nicht. Eine blockierte automatische Prüfung ist kein Nachweis eines defekten Links.
+Die Quellenangaben und manuellen Prüfdaten stehen in `web/index.html`.
+Prüfdaten nur nach einer tatsächlichen Prüfung ändern; ein Build ist keine Prüfung.
+Wöchentliche HTTP-Berichte führen ihren eigenen UTC-Zeitstempel und aktualisieren
+die Angaben auf der Website nicht. Eine blockierte Prüfung belegt keinen defekten Link.
 Besonderheiten einzelner Schulseiten sind in [NOTES.md](../NOTES.md) dokumentiert.
 
 Für den Bestand der Schulgemeinden das in der README verlinkte kantonale
@@ -55,8 +56,8 @@ und lädt die Antwortinhalte nicht herunter. Ergebnisse erscheinen nach Abschlus
 der jeweiligen Anfrage; die Zusammenfassung nennt Parallelität, Timeout und
 Laufzeit. CSV-Pfad, Timeout, Parallelität und User-Agent stehen in `config.yaml`
 (Standard: acht parallele Anfragen, 20 Sekunden Timeout). Relative CSV-Pfade
-beziehen sich auf das Verzeichnis der Konfiguration. Für den User-Agent nur
-ASCII-Zeichen verwenden.
+beziehen sich auf das Verzeichnis der Konfiguration. Der User-Agent muss aus
+druckbaren ASCII-Zeichen bestehen; andere Werte werden als Eingabefehler abgewiesen.
 
 Exit-Code `0`: alle Links erreichbar; `1`: mindestens eine Prüfung fehlgeschlagen,
 auch bei HTTP 403 oder 429; `2`: ungültige Eingabe oder nicht schreibbarer Bericht.
@@ -107,16 +108,22 @@ make check
 
 `make check` führt Ruff, pytest sowie die JavaScript-Selbstprüfung aus und benötigt
 für Letztere Node.js. Es werden keine npm-Pakete benötigt. Die lokalen HTTP-Tests
-benötigen Zugriff auf einen Loopback-Port.
+benötigen Zugriff auf einen Loopback-Port. Die CI prüft Python 3.13 und 3.14.
 
 Unter [Settings → Pages](https://github.com/machinelearningZH/gemeindeseiten/settings/pages)
 muss **Build and deployment → Source → GitHub Actions** eingestellt sein.
 Die vorhandene Sichtbarkeit beibehalten. Die veröffentlichte Standardadresse ist
 `https://machinelearningzh.github.io/gemeindeseiten/`.
 
-Der Workflow **Publish directory to GitHub Pages** erstellt die statische Seite
-bei Änderungen an Daten, Webdateien, Generator oder Build-Konfiguration auf `main`.
-Er lässt sich dort auch manuell starten. Er veröffentlicht nur den Inhalt von
-`_site/`; Python-Code, Konfiguration, Tests und interne Notizen gehören nicht zum
-Pages-Artefakt. Ein Jekyll-Schritt ist nicht mehr nötig. Feature-Branches lösen
-keine Veröffentlichung aus. Die erzeugten Dateien werden nicht eingecheckt.
+Der [Pages-Workflow](../.github/workflows/pages.yml) baut und veröffentlicht bei
+Änderungen auf `main` an `data/**`, `web/**`, `src/municipalities/build_site.py`,
+`pyproject.toml`, `uv.lock` oder am Workflow selbst. Er lässt sich auf `main` auch
+über **Actions → Publish directory to GitHub Pages → Run workflow** starten.
+Änderungen nur an Markdown-Dokumentation und Pushes auf Feature-Branches lösen
+keine Veröffentlichung aus.
+
+Der Workflow installiert das Projekt mit `uv sync --locked --no-dev`, führt
+`uv run --no-sync build-site` aus und veröffentlicht `_site/` als Pages-Artefakt.
+Es enthält HTML, CSS, JavaScript, beide CSV-Dateien und `.nojekyll`.
+Die erzeugten Dateien werden nicht eingecheckt. Die CI läuft separat; vor dem
+Merge `make check` ausführen.

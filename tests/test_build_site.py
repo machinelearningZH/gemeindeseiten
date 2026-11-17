@@ -108,6 +108,46 @@ def test_general_feedback_link_is_in_header_only(tmp_path: Path) -> None:
     assert "Rückmeldung</th>" not in html
 
 
+def test_build_renders_document_links_and_marks_missing_entries(
+    source: Path, tmp_path: Path
+) -> None:
+    (source / "data" / "municipalities-canton-zurich.csv").write_text(
+        "gemeinde_name,gemeinde_website_url,erlasse_url,gemeindeordnung_url,personalrecht_url\n"
+        "Example,https://example.com/,https://example.com/laws,"
+        "https://example.com/constitution?a=1&b=2,https://example.com/personnel\n",
+        encoding="utf-8",
+    )
+    output = tmp_path / "output"
+    build_site(source, output)
+    html = (output / "index.html").read_text(encoding="utf-8")
+    links = Page(html).links
+    assert {
+        "href": "https://example.com/constitution?a=1&b=2",
+        "aria-label": "Gemeindeordnung Example",
+    } in links
+    assert {
+        "href": "https://example.com/personnel",
+        "aria-label": "Personalrecht Example",
+    } in links
+    assert html.count('<span aria-label="Noch nicht erfasst">—</span>') == 2
+    assert html.count("<td>") == 6
+
+
+@pytest.mark.parametrize("column", ["gemeindeordnung_url", "personalrecht_url"])
+def test_build_rejects_unsafe_document_urls_before_writing(
+    source: Path, tmp_path: Path, column: str
+) -> None:
+    (source / "data" / "municipalities-canton-zurich.csv").write_text(
+        f"gemeinde_name,gemeinde_website_url,erlasse_url,{column}\n"
+        "Example,https://example.com/,https://example.com/laws,javascript:alert(1)\n",
+        encoding="utf-8",
+    )
+    output = tmp_path / "output"
+    with pytest.raises(ValueError):
+        build_site(source, output)
+    assert not output.exists()
+
+
 def test_build_rejects_unsafe_urls_before_writing(source: Path, tmp_path: Path) -> None:
     csv_path = source / "data" / "municipalities-canton-zurich.csv"
     csv_path.write_text(csv_path.read_text().replace("https://example.com/", "javascript:alert(1)"))

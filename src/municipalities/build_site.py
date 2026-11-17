@@ -8,7 +8,7 @@ from string import Template
 from typing import Annotated
 
 import typer
-from pydantic import BaseModel, ConfigDict, Field, HttpUrl
+from pydantic import BaseModel, ConfigDict, Field, HttpUrl, field_validator
 
 
 app = typer.Typer(add_completion=False, pretty_exceptions_enable=False)
@@ -28,6 +28,14 @@ class Municipality(BaseModel):
     gemeinde_name: Annotated[str, Field(min_length=1)]
     gemeinde_website_url: HttpUrl
     erlasse_url: HttpUrl
+    gemeindeordnung_url: HttpUrl | None = None
+    personalrecht_url: HttpUrl | None = None
+
+    @field_validator("gemeindeordnung_url", "personalrecht_url", mode="before")
+    @classmethod
+    def empty_document_url(cls, value: object) -> object:
+        """Allow blank CSV cells for documents not yet captured."""
+        return None if isinstance(value, str) and not value.strip() else value
 
 
 def render_rows(csv_path: Path, *, schools: bool) -> list[str]:
@@ -43,12 +51,21 @@ def render_rows(csv_path: Path, *, schools: bool) -> list[str]:
                 if prefix not in SCHOOL_TYPES:
                     raise ValueError("Unknown school municipality type.")
                 kind = SCHOOL_TYPES[prefix]
-            website, laws = str(entry.gemeinde_website_url), str(entry.erlasse_url)
+            cells = "".join(
+                f'<td><a href="{escape(str(url))}" aria-label="{label} {escape(name)}">'
+                f"{label}</a></td>"
+                if url is not None
+                else '<td><span aria-label="Noch nicht erfasst">—</span></td>'
+                for label, url in (
+                    ("Rechtssammlung", entry.erlasse_url),
+                    ("Gemeindeordnung", entry.gemeindeordnung_url),
+                    ("Personalrecht", entry.personalrecht_url),
+                )
+            )
             rows.append(
                 f'<tr data-type="{kind}">'
-                f'<th scope="row"><a href="{escape(website)}">{escape(name)}</a></th>'
-                f'<td><a href="{escape(laws)}" aria-label="Rechtssammlung {escape(name)}">'
-                "Rechtssammlung</a></td></tr>"
+                f'<th scope="row"><a href="{escape(str(entry.gemeinde_website_url))}">'
+                f"{escape(name)}</a></th>{cells}</tr>"
             )
     if not rows:
         raise ValueError("Municipality CSV must not be empty.")

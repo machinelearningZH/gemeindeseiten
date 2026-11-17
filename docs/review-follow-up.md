@@ -14,11 +14,13 @@ This records dispositions for the existing review rather than a new audit.
 | Weekly HTTP reports with blocked/new/persistent failures | Weekly/manual Actions workflow produces dated JSON and Markdown, compares prior reports, and never removes links. Report tests cover classification, missing history, redaction and file protection. |
 | Accessible link names, keyboard focus and mobile names | Named law links, row/column headers, focus styles, responsive layout, live counts and no-JavaScript fallback implemented. |
 | Keep GitHub Pages | Existing Pages deployment actions retained; only static generated files uploaded, using relative asset paths. |
-| School coverage mapping and document-title pilot/search | Deferred pending curated relationships, selected pilot data and evidence of staff needs; decisions tracked in `PLAN.md`. |
+| Direct document links | Gemeindeordnung and Personalrecht links added for 14 political municipalities, using two optional CSV URL fields. No additional source/date fields shown; populated URLs join the weekly checker. |
+| School coverage mapping and document-title search | Deferred pending curated relationships/titles and evidence of staff needs; decisions tracked in `PLAN.md`. |
 | Observe five to eight staff completing real tasks | Requires participants; tracked in `PLAN.md`. |
 
-Validation: `make check` passed (45 pytest tests, Node search/filter checks, Ruff lint
+Validation: `make check` passed (52 pytest tests, Node search/filter checks, Ruff lint
 and formatting). Workflow YAML, full action SHAs and shell syntax were checked.
 The local browser confirmed search, combined filtering, empty/reset states and
 desktop/mobile rendering, including table semantics and no horizontal overflow.
-Live municipal destinations, hosted Actions and a full accessibility audit were not checked.
+All 28 pilot document URLs returned successful HTTP responses. Other existing
+municipal destinations, hosted Actions and a full accessibility audit were not rechecked.

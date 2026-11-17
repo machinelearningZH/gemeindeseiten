@@ -3,6 +3,10 @@
 Die beiden CSV-Dateien unter `data/` sind die einzige Quelle für die Einträge:
 
 - `municipalities-canton-zurich.csv`: politische Gemeinden mit ihren Codes.
+  Die optionalen Spalten `gemeindeordnung_url` und `personalrecht_url` enthalten
+  die Dokumentlinks für den Pilot mit 14 Gemeinden; sonst bleiben sie leer.
+  Offizielle Dokumentseiten bevorzugen, direkte PDFs verwenden, wenn die Sammlung
+  keine eigene Dokumentseite anbietet. «—» auf der Website bedeutet nur «noch nicht erfasst».
 - `school-municipalities-canton-zurich.csv`: selbstständige Schulgemeinden ohne
   Codes der politischen Gemeinden. Der Namensanfang bestimmt den Typ:
   `Primarschulgemeinde`, `Sekundarschulgemeinde` oder `Volksschulgemeinde`.
@@ -45,7 +49,8 @@ make check-links CONFIG=pfad/config.yaml
 uv run check-links --config config.schulgemeinden.yaml
 ```
 
-Der Checker prüft beide URL-Spalten mit HTTPX-GET-Anfragen, folgt Weiterleitungen
+Der Checker prüft Homepage, Rechtssammlung und alle ausgefüllten optionalen
+Dokument-URL-Spalten mit HTTPX-GET-Anfragen, folgt Weiterleitungen
 und lädt die Antwortinhalte nicht herunter. Ergebnisse erscheinen nach Abschluss
 der jeweiligen Anfrage; die Zusammenfassung nennt Parallelität, Timeout und
 Laufzeit. CSV-Pfad, Timeout, Parallelität und User-Agent stehen in `config.yaml`

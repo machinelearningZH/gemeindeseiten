@@ -21,3 +21,4 @@ coverage.xml
 # GitHub Pages build output
 _pages/
 _site/
+reports/

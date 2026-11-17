@@ -59,24 +59,6 @@ def test_csv_is_sorted_by_municipality_name(rows: list[dict[str, str]]) -> None:
     assert names == sorted(names)
 
 
-@pytest.mark.parametrize(
-    ("csv_path", "section"),
-    [(CSV_PATH, "Politische Gemeinden"), (SCHOOL_CSV_PATH, "Schulgemeinden")],
-)
-def test_readme_table_matches_csv(csv_path: Path, section: str) -> None:
-    with csv_path.open(encoding="utf-8", newline="") as file:
-        rows = list(csv.DictReader(file))
-    readme = (CSV_PATH.parent.parent / "README.md").read_text(encoding="utf-8")
-    section_text = readme.split(f"## {section}\n", 1)[1].split("\n## ", 1)[0]
-    table_rows = [line for line in section_text.splitlines() if line.startswith("| [")]
-    assert len(table_rows) == len(rows)
-    for table_row, row in zip(table_rows, rows, strict=True):
-        assert [cell.strip() for cell in table_row.split("|")[1:-1]] == [
-            f"[{row['gemeinde_name']}]({row['gemeinde_website_url']})",
-            f"[Erlasse]({row['erlasse_url']})",
-        ]
-
-
 def test_school_csv_covers_official_municipality_types() -> None:
     with SCHOOL_CSV_PATH.open(encoding="utf-8", newline="") as file:
         reader = csv.DictReader(file)

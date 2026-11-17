@@ -1,5 +1,7 @@
 # Gemeindewebsites und Rechtssammlungen im Kanton Zürich
 
+![Screenshot des Gemeindeverzeichnisses](_imgs/screenshot_01.png)
+
 [Gemeindeverzeichnis öffnen](https://machinelearningzh.github.io/gemeindeseiten/)
 
 Für Mitarbeitende der kantonalen und kommunalen Verwaltung: Websites und

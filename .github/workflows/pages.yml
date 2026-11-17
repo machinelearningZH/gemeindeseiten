@@ -1,12 +1,14 @@
-name: Publish README to GitHub Pages
+name: Publish directory to GitHub Pages
 
 on:
   push:
     branches: [main]
     paths:
-      - README.md
-      - data/municipalities-canton-zurich.csv
-      - data/school-municipalities-canton-zurich.csv
+      - data/**
+      - web/**
+      - src/municipalities/build_site.py
+      - pyproject.toml
+      - uv.lock
       - .github/workflows/pages.yml
   workflow_dispatch:
 
@@ -30,24 +32,21 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Configure Pages
-        id: pages
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
 
-      - name: Prepare README as homepage
-        env:
-          BASE_PATH: ${{ steps.pages.outputs.base_path }}
-        run: |
-          mkdir -p _pages/data
-          { printf '%s\n' '---' 'layout: default' '---'; cat README.md; } > _pages/index.md
-          printf 'theme: jekyll-theme-primer\nbaseurl: "%s"\n' "$BASE_PATH" > _pages/_config.yml
-          cp data/municipalities-canton-zurich.csv _pages/data/
-          cp data/school-municipalities-canton-zurich.csv _pages/data/
-
-      - name: Build with Jekyll
-        uses: actions/jekyll-build-pages@44a6e6beabd48582f863aeeb6cb2151cc1716697 # v1.0.13
+      - name: Set up uv
+        uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
         with:
-          source: ./_pages
-          destination: ./_site
+          version: "0.13.5"
+          python-version: "3.13"
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+
+      - name: Install project
+        run: uv sync --locked --no-dev
+
+      - name: Generate static directory from CSV
+        run: uv run --no-sync build-site
 
       - name: Upload site
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0

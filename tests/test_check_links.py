@@ -18,6 +18,32 @@ from municipalities import check_links
 runner = CliRunner()
 
 
+def test_optional_document_links_are_checked_and_reported(
+    config_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    config_path.with_name("municipalities.csv").write_text(
+        "gemeinde_name,gemeinde_website_url,erlasse_url,gemeindeordnung_url,personalrecht_url\n"
+        "Example,https://example.com/,https://example.com/laws,"
+        "https://example.com/constitution,https://example.com/personnel\n"
+        "Other,https://other.example/,https://other.example/laws,, \n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(check_links, "check_url", lambda *args: (True, "HTTP 200"))
+    report = config_path.with_name("report.json")
+    result = runner.invoke(check_links.app, ["--config", str(config_path), "--report", str(report)])
+    assert result.exit_code == 0, result.output
+    records = json.loads(report.read_text(encoding="utf-8"))["results"]
+    assert len(records) == 6
+    assert {
+        (row["column"], row["url"])
+        for row in records
+        if row["column"] not in check_links.URL_COLUMNS
+    } == {
+        ("gemeindeordnung_url", "https://example.com/constitution"),
+        ("personalrecht_url", "https://example.com/personnel"),
+    }
+
+
 @pytest.fixture
 def client() -> Iterator[httpx.Client]:
     with httpx.Client(
@@ -63,6 +89,23 @@ def test_http_status_and_redirects(
     client: httpx.Client, website: str, path: str, expected: tuple[bool, str]
 ) -> None:
     assert check_links.check_url(website + path, client) == expected
+
+
+def test_check_does_not_read_response_body_and_closes_stream() -> None:
+    class UnreadBody(httpx.SyncByteStream):
+        closed = False
+
+        def __iter__(self) -> Iterator[bytes]:
+            raise AssertionError("Availability checks must not download the response body")
+
+        def close(self) -> None:
+            self.closed = True
+
+    body = UnreadBody()
+    transport = httpx.MockTransport(lambda request: httpx.Response(200, stream=body))
+    with httpx.Client(transport=transport) as client:
+        assert check_links.check_url("https://example.com/large.pdf", client) == (True, "HTTP 200")
+        assert body.closed
 
 
 @pytest.mark.parametrize("url", ["", "not-a-url", "file:///etc/passwd"])
@@ -145,10 +188,19 @@ def test_empty_or_malformed_csv_fails_before_requests(
         {"workers": 0},
         {"workers": True},
         {"user_agent": ""},
+        pytest.param({"user_agent": "MunicipalityLinkChecker Zürich"}, id="non_ascii_user_agent"),
         {"unknown": 1},
     ],
 )
-def test_invalid_configuration_is_rejected(config_path: Path, invalid: dict[str, object]) -> None:
+def test_invalid_configuration_is_rejected(
+    config_path: Path, invalid: dict[str, object], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    config_path.with_name("municipalities.csv").write_text(
+        "gemeinde_name,gemeinde_website_url,erlasse_url\n"
+        "Example,https://example.com/,https://example.com/laws\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(check_links, "check_url", lambda *args: pytest.fail("Unexpected request"))
     values = yaml.safe_load(config_path.read_text())
     values.update(invalid)
     config_path.write_text(yaml.safe_dump(values), encoding="utf-8")
@@ -224,3 +276,168 @@ def test_cli_reports_parallel_results_and_logs(
     assert "Completed 1/2" in caplog.text
     assert "Completed 2/2" in caplog.text
     assert "2 checked, 2 available, 0 unavailable" in caplog.text
+
+
+def test_report_distinguishes_blocked_new_and_persistent_failures(
+    config_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    config_path.with_name("municipalities.csv").write_text(
+        "gemeinde_name,gemeinde_website_url,erlasse_url\n"
+        "Example,https://example.com/,https://example.com/laws\n"
+        "Other | <script>,https://other.example/,https://other.example/laws\n",
+        encoding="utf-8",
+    )
+    previous = config_path.with_name("previous.json")
+    previous.write_text(
+        json.dumps(
+            {
+                "checked_at": "2026-11-09T07:00:00+00:00",
+                "results": [
+                    {
+                        "name": "Example",
+                        "column": "erlasse_url",
+                        "url": "https://example.com/laws",
+                        "status": "blocked",
+                        "detail": "HTTP 403",
+                        "failure": "uncompared",
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    statuses = {
+        "https://example.com/": (True, "HTTP 200"),
+        "https://example.com/laws": (False, "HTTP 403"),
+        "https://other.example/": (False, "HTTP 404"),
+        "https://other.example/laws": (False, "ConnectError: secret network detail"),
+    }
+    monkeypatch.setattr(check_links, "check_url", lambda url, client: statuses[url])
+    report = config_path.with_name("report.json")
+    summary = config_path.with_name("summary.md")
+    result = runner.invoke(
+        check_links.app,
+        [
+            "--config",
+            str(config_path),
+            "--report",
+            str(report),
+            "--previous-report",
+            str(previous),
+            "--summary",
+            str(summary),
+        ],
+    )
+    assert result.exit_code == 1, result.output
+    data = json.loads(report.read_text(encoding="utf-8"))
+    assert data["checked_at"].endswith(("Z", "+00:00"))
+    records = {item["url"]: item for item in data["results"]}
+    assert records["https://example.com/"]["status"] == "reachable"
+    assert records["https://example.com/"]["failure"] is None
+    assert records["https://example.com/laws"]["status"] == "blocked"
+    assert records["https://example.com/laws"]["failure"] == "persistent"
+    assert records["https://other.example/"]["status"] == "needs_review"
+    assert records["https://other.example/"]["failure"] == "new"
+    assert records["https://other.example/laws"]["detail"] == "ConnectError"
+    assert "secret network detail" not in report.read_text(encoding="utf-8")
+    markdown = summary.read_text(encoding="utf-8")
+    assert "HTTP 403" in markdown and "persistent" in markdown and "new" in markdown
+    assert "Other &#124; &lt;script&gt;" in markdown
+    assert "secret network detail" not in markdown
+
+
+def test_report_without_history_does_not_claim_new_failures(
+    config_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    config_path.with_name("municipalities.csv").write_text(
+        "gemeinde_name,gemeinde_website_url,erlasse_url\n"
+        "Example,https://example.com/,https://example.com/laws\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(check_links, "check_url", lambda *args: (False, "HTTP 429"))
+    report = config_path.with_name("report.json")
+    result = runner.invoke(check_links.app, ["--config", str(config_path), "--report", str(report)])
+    assert result.exit_code == 1, result.output
+    records = json.loads(report.read_text(encoding="utf-8"))["results"]
+    assert all(item["status"] == "blocked" for item in records)
+    assert all(item["failure"] == "uncompared" for item in records)
+
+
+def test_invalid_previous_report_fails_before_requests(
+    config_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    config_path.with_name("municipalities.csv").write_text(
+        "gemeinde_name,gemeinde_website_url,erlasse_url\n"
+        "Example,https://example.com/,https://example.com/laws\n",
+        encoding="utf-8",
+    )
+    previous = config_path.with_name("previous.json")
+    previous.write_text('{"results": "secret invalid data"}', encoding="utf-8")
+    monkeypatch.setattr(check_links, "check_url", lambda *args: pytest.fail("Unexpected request"))
+    result = runner.invoke(
+        check_links.app, ["--config", str(config_path), "--previous-report", str(previous)]
+    )
+    assert result.exit_code == 2
+    assert "Invalid configuration or report fields" in result.output
+    assert "secret invalid data" not in result.output
+
+
+@pytest.mark.parametrize("option", ["--report", "--summary"])
+@pytest.mark.parametrize("target", ["config.yaml", "municipalities.csv", "previous.json"])
+def test_reports_cannot_overwrite_inputs(
+    config_path: Path, monkeypatch: pytest.MonkeyPatch, option: str, target: str
+) -> None:
+    csv_path = config_path.with_name("municipalities.csv")
+    content = (
+        "gemeinde_name,gemeinde_website_url,erlasse_url\n"
+        "Example,https://example.com/,https://example.com/laws\n"
+    )
+    csv_path.write_text(content, encoding="utf-8")
+    previous = config_path.with_name("previous.json")
+    previous.write_text('{"checked_at":"2026-11-09T07:00:00Z","results":[]}', encoding="utf-8")
+    output = config_path.with_name(target)
+    original = output.read_bytes()
+    monkeypatch.setattr(check_links, "check_url", lambda *args: pytest.fail("Unexpected request"))
+    result = runner.invoke(
+        check_links.app,
+        ["--config", str(config_path), "--previous-report", str(previous), option, str(output)],
+    )
+    assert result.exit_code == 2
+    assert "Report outputs must differ" in result.output
+    assert output.read_bytes() == original
+
+
+def test_report_outputs_cannot_overwrite_each_other(
+    config_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    config_path.with_name("municipalities.csv").write_text(
+        "gemeinde_name,gemeinde_website_url,erlasse_url\n"
+        "Example,https://example.com/,https://example.com/laws\n",
+        encoding="utf-8",
+    )
+    output = config_path.with_name("report.json")
+    monkeypatch.setattr(check_links, "check_url", lambda *args: pytest.fail("Unexpected request"))
+    result = runner.invoke(
+        check_links.app,
+        ["--config", str(config_path), "--report", str(output), "--summary", str(output)],
+    )
+    assert result.exit_code == 2
+    assert "Report outputs must differ" in result.output
+    assert not output.exists()
+
+
+def test_report_write_failure_is_an_operational_error(
+    config_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    config_path.with_name("municipalities.csv").write_text(
+        "gemeinde_name,gemeinde_website_url,erlasse_url\n"
+        "Example,https://example.com/,https://example.com/laws\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(check_links, "check_url", lambda *args: (True, "HTTP 200"))
+    result = runner.invoke(
+        check_links.app,
+        ["--config", str(config_path), "--report", str(config_path.parent / "missing/report.json")],
+    )
+    assert result.exit_code == 2
+    assert "Cannot write link report" in result.output

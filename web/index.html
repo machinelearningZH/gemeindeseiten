@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Websites und Rechtssammlungen der politischen Gemeinden und selbstständigen Schulgemeinden im Kanton Zürich.">
+  <title>Gemeindewebsites und Rechtssammlungen | Kanton Zürich</title>
+  <link rel="stylesheet" href="site.css">
+  <script src="site.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#directory">Zur Gemeindeliste</a>
+  <header class="page-header">
+    <div class="container">
+      <p class="eyebrow">Kanton Zürich · Experimentelle Linksammlung</p>
+      <h1>Gemeindewebsites und<br>Rechtssammlungen schnell finden</h1>
+      <p class="intro">Für Mitarbeitende der kantonalen und kommunalen Verwaltung.
+        Direkte Links zu den politischen Gemeinden und selbstständigen Schulgemeinden.</p>
+      <p class="notice">Keine offizielle Publikation. Massgeblich sind die Originalpublikationen der Gemeinden.</p>
+      <p><a href="mailto:datashop@statistik.zh.ch?subject=Gemeindeseiten%3A%20R%C3%BCckmeldung">Fehler melden / Link vorschlagen</a></p>
+    </div>
+  </header>
+
+  <main class="container" id="directory">
+    <form id="filters" class="filters" role="search" aria-label="Gemeinden suchen und filtern" hidden>
+      <div class="search-field">
+        <label for="search">Gemeinde suchen</label>
+        <input id="search" type="search" placeholder="Zum Beispiel Wädenswil" autocomplete="off" aria-describedby="search-hint">
+        <p id="search-hint" class="hint">Auch «Waedenswil» oder «Wadenswil» findet «Wädenswil».</p>
+      </div>
+      <div>
+        <label for="type">Gemeindetyp</label>
+        <select id="type">
+          <option value="all">Alle Gemeindetypen</option>
+          <option value="political">Politische Gemeinden</option>
+          <option value="primary">Primarschulgemeinden</option>
+          <option value="secondary">Sekundarschulgemeinden</option>
+          <option value="combined">Volksschulgemeinden</option>
+        </select>
+      </div>
+      <button id="clear" type="button">Zurücksetzen</button>
+    </form>
+
+    <div class="list-heading">
+      <h2>Gemeindeverzeichnis</h2>
+      <p id="result-count" role="status" aria-live="polite" aria-atomic="true">$count Gemeinden</p>
+    </div>
+    <p class="hint">Direkte Links zur Gemeindeordnung und zum Personalrecht der politischen Gemeinden. «—» bedeutet: kein verifizierter Link.</p>
+    <noscript><p>Alle Gemeinden sind unten aufgeführt. Mit der Suchfunktion Ihres Browsers können Sie nach einem Namen suchen.</p></noscript>
+    <p id="no-results" class="empty-state" hidden>Keine Gemeinde gefunden. Ändern Sie den Suchbegriff oder den Gemeindetyp.</p>
+    <table role="table">
+      <caption class="visually-hidden">Websites und Rechtssammlungen der Gemeinden im Kanton Zürich</caption>
+      <thead>
+        <tr><th scope="col">Gemeinde</th><th scope="col">Rechtssammlung</th><th scope="col">Gemeindeordnung</th><th scope="col">Personalrecht</th></tr>
+      </thead>
+      <tbody id="municipalities">
+$rows
+      </tbody>
+    </table>
+
+    <section class="about" aria-labelledby="about-heading">
+      <h2 id="about-heading">Über diese Sammlung</h2>
+      <details>
+        <summary>Quellen und Prüfstand</summary>
+        <div class="review-dates">
+          <div>
+            <h3>Politische Gemeinden</h3>
+            <p>Inhalt und Zielseiten manuell geprüft: <time datetime="2026-10-23">23. Oktober 2026</time>.<br>
+              Letzte dokumentierte automatische HTTP-Prüfung: <time datetime="2026-10-23">23. Oktober 2026</time>.</p>
+            <a href="data/municipalities-canton-zurich.csv" download>Politische Gemeinden als CSV</a>
+          </div>
+          <div>
+            <h3>Schulgemeinden</h3>
+            <p>Inhalt und Zielseiten manuell geprüft: <time datetime="2026-10-26">26. Oktober 2026</time>.<br>
+              Letzte dokumentierte automatische HTTP-Prüfung: <time datetime="2026-10-26">26. Oktober 2026</time>.</p>
+            <a href="data/school-municipalities-canton-zurich.csv" download>Schulgemeinden als CSV</a>
+          </div>
+        </div>
+        <p>Grundlage für die 60 selbstständigen Schulgemeinden ist das
+          <a href="https://www.zh.ch/content/dam/zhweb/bilder-dokumente/themen/politik-staat/gemeinden/gemeindeverzeichnis.pdf">Gemeindeverzeichnis des Gemeindeamts</a>
+          mit Stand vom 1. Juli 2026. Die Schuladressen wurden über das
+          <a href="https://www.zh.ch/de/bildung/schulen.html">kantonale Schuladressenverzeichnis</a>
+          und die Websites der Schulen recherchiert. Schulen innerhalb einer politischen Gemeinde sind nicht zusätzlich aufgeführt.</p>
+        <p>Eine erfolgreiche HTTP-Prüfung bestätigt die Erreichbarkeit, nicht den Inhalt.
+          Zugriffssperren wie HTTP 403 und JavaScript-Seiten erfordern eine manuelle Prüfung;
+          Links werden deshalb nicht automatisch entfernt. Wöchentliche Prüfergebnisse finden sich in den
+          <a href="https://github.com/machinelearningZH/gemeindeseiten/actions/workflows/check-links.yml">Prüfberichten auf GitHub</a>.
+          Die oben genannten historischen Prüfdaten werden dadurch nicht automatisch aktualisiert.</p>
+      </details>
+    </section>
+  </main>
+
+  <footer class="container">
+    <p>Kontakt und Pflege: Team Data, Amt für Statistik und Daten Kanton Zürich ·
+      <a href="mailto:datashop@statistik.zh.ch">datashop@statistik.zh.ch</a></p>
+    <p><a href="https://github.com/machinelearningZH/gemeindeseiten">Quellcode und Daten auf GitHub</a></p>
+  </footer>
+</body>
+</html>

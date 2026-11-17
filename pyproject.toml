@@ -23,6 +23,7 @@ dev = [
 
 [project.scripts]
 check-links = "municipalities.check_links:app"
+build-site = "municipalities.build_site:app"
 
 [build-system]
 requires = ["setuptools>=77"]

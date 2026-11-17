@@ -1,0 +1,106 @@
+import csv
+from html.parser import HTMLParser
+from pathlib import Path
+from urllib.parse import parse_qs, urlsplit
+
+import pytest
+
+from municipalities.build_site import build_site
+
+
+ROOT = Path(__file__).parent.parent
+
+
+class Page(HTMLParser):
+    def __init__(self, html: str) -> None:
+        super().__init__()
+        self.rows: list[dict[str, str | None]] = []
+        self.links: list[dict[str, str | None]] = []
+        self.feed(html)
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        attributes = dict(attrs)
+        if tag == "tr" and "data-type" in attributes:
+            self.rows.append(attributes)
+        if tag == "a":
+            self.links.append(attributes)
+
+
+def test_build_publishes_every_csv_entry_and_only_public_files(tmp_path: Path) -> None:
+    build_site(ROOT, tmp_path)
+    page = Page((tmp_path / "index.html").read_text(encoding="utf-8"))
+    assert len(page.rows) == 220
+    assert [row["data-type"] for row in page.rows].count("political") == 160
+    assert [row["data-type"] for row in page.rows].count("primary") == 24
+    assert [row["data-type"] for row in page.rows].count("secondary") == 28
+    assert [row["data-type"] for row in page.rows].count("combined") == 8
+    for filename in ["municipalities-canton-zurich.csv", "school-municipalities-canton-zurich.csv"]:
+        assert (tmp_path / "data" / filename).read_bytes() == (
+            ROOT / "data" / filename
+        ).read_bytes()
+        with (ROOT / "data" / filename).open(encoding="utf-8", newline="") as file:
+            for row in csv.DictReader(file):
+                assert any(link.get("href") == row["gemeinde_website_url"] for link in page.links)
+                assert any(
+                    link.get("href") == row["erlasse_url"]
+                    and row["gemeinde_name"] in (link.get("aria-label") or "")
+                    for link in page.links
+                )
+    assert {
+        path.relative_to(tmp_path).as_posix() for path in tmp_path.rglob("*") if path.is_file()
+    } == {
+        "index.html",
+        "site.css",
+        "site.js",
+        ".nojekyll",
+        "data/municipalities-canton-zurich.csv",
+        "data/school-municipalities-canton-zurich.csv",
+    }
+
+
+@pytest.fixture
+def source(tmp_path: Path) -> Path:
+    source = tmp_path / "source"
+    (source / "web").mkdir(parents=True)
+    (source / "data").mkdir()
+    (source / "web" / "index.html").write_text(
+        "<table>$rows</table><p>$count</p>", encoding="utf-8"
+    )
+    for filename in ["site.css", "site.js"]:
+        (source / "web" / filename).write_text("", encoding="utf-8")
+    for filename, name in [
+        ("municipalities-canton-zurich.csv", 'A <script> & "B"'),
+        ("school-municipalities-canton-zurich.csv", "Primarschulgemeinde Beispiel"),
+    ]:
+        with (source / "data" / filename).open("w", encoding="utf-8", newline="") as file:
+            writer = csv.writer(file)
+            writer.writerow(["gemeinde_name", "gemeinde_website_url", "erlasse_url"])
+            writer.writerow(
+                [name, "https://example.com/", "https://example.com/laws?a=1&b=2#chapter"]
+            )
+    return source
+
+
+def test_build_escapes_content_and_prefills_feedback(source: Path, tmp_path: Path) -> None:
+    output = tmp_path / "output"
+    build_site(source, output)
+    html = (output / "index.html").read_text(encoding="utf-8")
+    assert "<script>" not in html
+    assert "A &lt;script&gt; &amp; &quot;B&quot;" in html
+    page = Page(html)
+    feedback = [
+        link["href"] for link in page.links if (link.get("href") or "").startswith("mailto:")
+    ]
+    assert len(feedback) == 2
+    query = parse_qs(urlsplit(feedback[0]).query)
+    assert 'A <script> & "B"' in query["subject"][0]
+    assert "https://example.com/laws?a=1&b=2#chapter" in query["body"][0]
+
+
+def test_build_rejects_unsafe_urls_before_writing(source: Path, tmp_path: Path) -> None:
+    csv_path = source / "data" / "municipalities-canton-zurich.csv"
+    csv_path.write_text(csv_path.read_text().replace("https://example.com/", "javascript:alert(1)"))
+    output = tmp_path / "output"
+    with pytest.raises(ValueError):
+        build_site(source, output)
+    assert not output.exists()

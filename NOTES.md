@@ -10,11 +10,10 @@ Essential insights and (non obvious) findings gathered during coding work.
 - Volken's “Systematische Rechtssammlung” navigation redirects to its history page.
   The CSV instead uses the municipality-filtered ePublikation link published under
   “Gemeinde” in that same navigation.
-- Pages builds stage only README.md (as index.md) and the CSV, keeping repository
-  source files out of the published site. After recreating
-  `machinelearningZH/gemeindeseiten`, Pages was confirmed disabled and no workflows
-  were uploaded on 2026-10-23. Enable Pages again with GitHub Actions as the source
-  and choose the site's visibility; the workflow derives the base path automatically.
+- Pages builds generate a standalone static directory from both CSV files and `web/`
+  into `_site/`; only HTML, CSS, JavaScript and CSV downloads are published. All asset
+  paths are relative so GitHub project Pages and custom base paths work without Jekyll.
+  The CSV files are authoritative; README tables are no longer maintained separately.
 - The link checker lives in `src/municipalities/` and shares one HTTPX client
   across worker threads. It is packaged to expose `uv run check-links`; operator settings are
   validated from YAML, and relative CSV paths resolve from the configuration file.
@@ -32,3 +31,12 @@ Essential insights and (non obvious) findings gathered during coding work.
   Stadel's default download folder is its systematic law collection. Laufen-Uhwiesen
   links directly to a public SharePoint folder; Obfelden-Ottenbach links to its
   SharePoint law collection from the downloads page.
+- The weekly checker stores JSON/Markdown as Actions artifacts and compares against
+  the last successful default-branch report. Missing history yields `uncompared`,
+  never an assertion that a failure is new. HTTP 403/429 are blocked checks; HTTP
+  success says nothing about content. Builds and automated checks do not advance
+  the manual research dates shown on the site.
+
+## 2026-10-26: eMudhra/emSign certificate update
+
+Require certifi >=2026.10.19; only certifi and affected pip changed package versions. Keep the seven-day cooldown. Remove only the incident certifi exception after 2026-10-27 03:24:17 Europe/Zurich, then relock and sync. Build/CI uv pins are 0.13.5; Python image stages patch existing pip with secure uv. Deployment images still require a fresh build (`--pull --no-cache`) and verification before redeployment. Advisory: https://discuss.python.org/t/109576.

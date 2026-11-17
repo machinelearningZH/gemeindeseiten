@@ -23,6 +23,7 @@ dev = [
 
 [project.scripts]
 check-links = "municipalities.check_links:app"
+build-site = "municipalities.build_site:app"
 
 [build-system]
 requires = ["setuptools>=77"]
@@ -32,6 +33,9 @@ build-backend = "setuptools.build_meta"
 where = ["src"]
 
 [tool.uv]
+constraint-dependencies = ["certifi>=2026.10.19"]
+# eMudhra/emSign: remove only certifi exceptions once artifacts age seven days.
+exclude-newer-package = { certifi = false }
 exclude-newer = "7 days"
 package = true
 

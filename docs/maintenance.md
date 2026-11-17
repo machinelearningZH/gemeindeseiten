@@ -30,9 +30,10 @@ Für den Bestand der Schulgemeinden das in der README verlinkte kantonale
 Gemeindeverzeichnis verwenden. Das Schuladressenverzeichnis enthält auch Schulen
 von Einheitsgemeinden und teilweise frühere Namen und Domains.
 
-«Fehler melden» bereitet im Mailprogramm eine Nachricht an
-`datashop@statistik.zh.ch` mit Gemeinde und beiden URLs vor. Es wird nichts
-automatisch versendet. Kontakt und Pflege werden in der Seitenvorlage genannt.
+«Fehler melden / Link vorschlagen» im Kopfbereich öffnet eine Nachricht an
+`datashop@statistik.zh.ch` im Mailprogramm. Gemeinde und betroffenen Link bitte
+in der Nachricht ergänzen. Es wird nichts automatisch versendet.
+Kontakt und Pflege werden in der Seitenvorlage genannt.
 
 ## Links prüfen
 

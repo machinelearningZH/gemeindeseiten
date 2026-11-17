@@ -6,7 +6,6 @@ from pathlib import Path
 from shutil import copyfile
 from string import Template
 from typing import Annotated
-from urllib.parse import quote, urlencode
 
 import typer
 from pydantic import BaseModel, ConfigDict, Field, HttpUrl
@@ -45,22 +44,11 @@ def render_rows(csv_path: Path, *, schools: bool) -> list[str]:
                     raise ValueError("Unknown school municipality type.")
                 kind = SCHOOL_TYPES[prefix]
             website, laws = str(entry.gemeinde_website_url), str(entry.erlasse_url)
-            query = urlencode(
-                {
-                    "subject": f"Gemeindeseiten: {name}",
-                    "body": f"Gemeinde: {name}\nHomepage: {website}\nRechtssammlung: {laws}\n\n"
-                    "Fehler oder Linkvorschlag:\n",
-                },
-                quote_via=quote,
-            )
-            feedback = f"mailto:datashop@statistik.zh.ch?{query}"
             rows.append(
                 f'<tr data-type="{kind}">'
                 f'<th scope="row"><a href="{escape(website)}">{escape(name)}</a></th>'
                 f'<td><a href="{escape(laws)}" aria-label="Rechtssammlung {escape(name)}">'
-                "Rechtssammlung</a></td>"
-                f'<td><a href="{escape(feedback)}" aria-label="Fehler melden für {escape(name)}">'
-                "Fehler melden</a></td></tr>"
+                "Rechtssammlung</a></td></tr>"
             )
     if not rows:
         raise ValueError("Municipality CSV must not be empty.")

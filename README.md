@@ -5,7 +5,7 @@
 Für Mitarbeitende der kantonalen und kommunalen Verwaltung: Websites und
 Rechtssammlungen von 160 politischen Gemeinden und 60 selbstständigen Schulgemeinden
 schnell finden. Suche mit Umlauten oder Umschreibungen, Filter nach Gemeindetyp und
-Rückmeldungen per E-Mail direkt beim Eintrag.
+Rückmeldungen per E-Mail über den Link im Kopfbereich.
 
 **Experimentelle Linksammlung; keine offizielle Publikation. Massgeblich sind die
 Originalpublikationen der Gemeinden.** Kontakt und Pflege: Team Data, Amt für

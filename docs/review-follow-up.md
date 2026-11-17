@@ -14,13 +14,15 @@ This records dispositions for the existing review rather than a new audit.
 | Weekly HTTP reports with blocked/new/persistent failures | Weekly/manual Actions workflow produces dated JSON and Markdown, compares prior reports, and never removes links. Report tests cover classification, missing history, redaction and file protection. |
 | Accessible link names, keyboard focus and mobile names | Named law links, row/column headers, focus styles, responsive layout, live counts and no-JavaScript fallback implemented. |
 | Keep GitHub Pages | Existing Pages deployment actions retained; only static generated files uploaded, using relative asset paths. |
-| Direct document links | Gemeindeordnung and Personalrecht links added for 14 political municipalities, using two optional CSV URL fields. No additional source/date fields shown; populated URLs join the weekly checker. |
+| Direct document links | Official collections checked for all 160 political municipalities: 155 Gemeindeordnung and 147 Personalrecht links verified. The other 18 cells stay blank and display a dash. No additional source/date fields shown; populated URLs join the weekly checker. |
 | School coverage mapping and document-title search | Deferred pending curated relationships/titles and evidence of staff needs; decisions tracked in `PLAN.md`. |
 | Observe five to eight staff completing real tasks | Requires participants; tracked in `PLAN.md`. |
 
-Validation: `make check` passed (52 pytest tests, Node search/filter checks, Ruff lint
+Validation: `make check` passed (53 pytest tests, Node search/filter checks, Ruff lint
 and formatting). Workflow YAML, full action SHAs and shell syntax were checked.
 The local browser confirmed search, combined filtering, empty/reset states and
 desktop/mobile rendering, including table semantics and no horizontal overflow.
-All 28 pilot document URLs returned successful HTTP responses. Other existing
-municipal destinations, hosted Actions and a full accessibility audit were not rechecked.
+Document destinations were checked against official collection titles and their public
+pages, PDFs or publication records; all 302 populated URLs returned HTTP 200.
+Hosted Actions and a full accessibility audit were
+not rechecked; automated HTTP availability does not establish legal currency.

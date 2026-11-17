@@ -40,7 +40,7 @@ def test_municipality_links_are_valid_https_urls(rows: list[dict[str, str]], col
         assert not any(character.isspace() for character in url), row["gemeinde_name"]
 
 
-def test_document_pilot_covers_four_original_and_ten_additional_municipalities(
+def test_document_links_preserve_initial_verified_municipalities(
     rows: list[dict[str, str]],
 ) -> None:
     expected = {
@@ -60,7 +60,12 @@ def test_document_pilot_covers_four_original_and_ten_additional_municipalities(
         "Illnau-Effretikon",
     }
     for column in DOCUMENT_COLUMNS:
-        assert {row["gemeinde_name"] for row in rows if row[column]} == expected
+        assert expected <= {row["gemeinde_name"] for row in rows if row[column]}
+
+
+def test_csv_covers_160_political_municipalities(rows: list[dict[str, str]]) -> None:
+    assert len(rows) == 160
+    assert {row["gebietstyp_code"] for row in rows} == {"3"}
 
 
 @pytest.mark.parametrize("column", ["gemeinde_code", "gemeinde_name"])

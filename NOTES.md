@@ -36,11 +36,19 @@ Essential insights and (non obvious) findings gathered during coding work.
   never an assertion that a failure is new. HTTP 403/429 are blocked checks; HTTP
   success says nothing about content. Builds and automated checks do not advance
   the manual research dates shown on the site.
-- The document pilot adds two optional political-municipality CSV fields, both covered
-  by the weekly checker. Blank cells mean not captured, not absent. Use official detail
+- The two optional political-municipality document URL fields are covered by the
+  weekly checker. Blank cells mean no link could be verified, not that a document
+  does not exist. Use official detail
   pages where available; Horgen and Wetzikon publish these links directly as PDFs,
   which may need replacing when new files are published. Kloten and Winterthur use
   JavaScript-based LexWork law pages. No source or review-date fields are displayed.
+- For ePublikation, verify the publication ID, title, `PUBLISHED` state and publishing
+  entity using its public `/api/v1/publications/{id}` record; town names alone also
+  match schools. Use the public `#!/search/publications/detail/{id}` link. The HTTP
+  checker sees the JavaScript shell, so it cannot detect removal of a hash-routed record.
+- Mixed Besoldungsverordnungen qualify as Personalrecht only when the published text
+  actually covers municipal staff. Authority-only compensation and school-only rules
+  are excluded. A blocked collection or a missing published personnel rule leaves a dash.
 
 ## 2026-10-26: eMudhra/emSign certificate update
 

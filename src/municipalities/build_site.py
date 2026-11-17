@@ -55,7 +55,7 @@ def render_rows(csv_path: Path, *, schools: bool) -> list[str]:
                 f'<td><a href="{escape(str(url))}" aria-label="{label} {escape(name)}">'
                 f"{label}</a></td>"
                 if url is not None
-                else '<td><span aria-label="Noch nicht erfasst">—</span></td>'
+                else '<td><span aria-label="Nicht verifiziert">—</span></td>'
                 for label, url in (
                     ("Rechtssammlung", entry.erlasse_url),
                     ("Gemeindeordnung", entry.gemeindeordnung_url),

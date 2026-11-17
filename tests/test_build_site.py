@@ -40,11 +40,17 @@ def test_build_publishes_every_csv_entry_and_only_public_files(tmp_path: Path) -
         with (ROOT / "data" / filename).open(encoding="utf-8", newline="") as file:
             for row in csv.DictReader(file):
                 assert any(link.get("href") == row["gemeinde_website_url"] for link in page.links)
-                assert any(
-                    link.get("href") == row["erlasse_url"]
-                    and row["gemeinde_name"] in (link.get("aria-label") or "")
-                    for link in page.links
-                )
+                for column, label in [
+                    ("erlasse_url", "Rechtssammlung"),
+                    ("gemeindeordnung_url", "Gemeindeordnung"),
+                    ("personalrecht_url", "Personalrecht"),
+                ]:
+                    if row.get(column):
+                        assert any(
+                            link.get("href") == row[column]
+                            and link.get("aria-label") == f"{label} {row['gemeinde_name']}"
+                            for link in page.links
+                        )
     assert {
         path.relative_to(tmp_path).as_posix() for path in tmp_path.rglob("*") if path.is_file()
     } == {
@@ -129,7 +135,7 @@ def test_build_renders_document_links_and_marks_missing_entries(
         "href": "https://example.com/personnel",
         "aria-label": "Personalrecht Example",
     } in links
-    assert html.count('<span aria-label="Noch nicht erfasst">—</span>') == 2
+    assert html.count('<span aria-label="Nicht verifiziert">—</span>') == 2
     assert html.count("<td>") == 6
 
 

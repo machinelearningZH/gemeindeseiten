@@ -4,9 +4,9 @@ Die beiden CSV-Dateien unter `data/` sind die einzige Quelle für die Einträge:
 
 - `municipalities-canton-zurich.csv`: politische Gemeinden mit ihren Codes.
   Die optionalen Spalten `gemeindeordnung_url` und `personalrecht_url` enthalten
-  die Dokumentlinks für den Pilot mit 14 Gemeinden; sonst bleiben sie leer.
+  die verifizierten Dokumentlinks der politischen Gemeinden; sonst bleiben sie leer.
   Offizielle Dokumentseiten bevorzugen, direkte PDFs verwenden, wenn die Sammlung
-  keine eigene Dokumentseite anbietet. «—» auf der Website bedeutet nur «noch nicht erfasst».
+  keine eigene Dokumentseite anbietet. «—» auf der Website bedeutet «kein verifizierter Link».
 - `school-municipalities-canton-zurich.csv`: selbstständige Schulgemeinden ohne
   Codes der politischen Gemeinden. Der Namensanfang bestimmt den Typ:
   `Primarschulgemeinde`, `Sekundarschulgemeinde` oder `Volksschulgemeinde`.

@@ -63,6 +63,17 @@ def test_build_publishes_every_csv_entry_and_only_public_files(tmp_path: Path) -
     }
 
 
+def test_build_lists_cantonal_laws_above_search(tmp_path: Path) -> None:
+    build_site(ROOT, tmp_path)
+    html = (tmp_path / "index.html").read_text(encoding="utf-8")
+    section = html.split('<section class="cantonal-laws"', 1)[1].split("</section>", 1)[0]
+    assert [link["href"] for link in Page(section).links] == [
+        f"https://www.zhlex.zh.ch/Erlass.html?Open&Ordnr={number}"
+        for number in ("131.1", "131.11", "161", "161.1", "175.2", "101")
+    ]
+    assert html.index(section) < html.index('<form id="filters"')
+
+
 @pytest.fixture
 def source(tmp_path: Path) -> Path:
     source = tmp_path / "source"

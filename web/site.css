@@ -19,6 +19,8 @@ h1 { margin: 0; max-width: 900px; font-size: clamp(1.8rem, 4.3vw, 3rem); line-he
 .notice, .hint { color: #425b6b; font-size: .9rem; }
 .notice { margin: 0; }
 main { padding-top: 2rem; }
+.cantonal-laws { margin-bottom: 2rem; }
+.cantonal-laws ul { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 28rem), 1fr)); gap: .25rem 2rem; margin: .75rem 0 0; padding-left: 1.25rem; }
 .filters { display: flex; flex-wrap: wrap; align-items: start; gap: 1rem; padding: 1.4rem; background: #f5f7f8; border: 1px solid #d8e0e5; border-radius: 4px; }
 .search-field { flex: 1 1 20rem; }
 label { display: block; margin-bottom: .4rem; font-weight: 650; }

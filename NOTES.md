@@ -2,6 +2,10 @@
 
 Essential insights and (non obvious) findings gathered during coding work.
 
+- Cantonal laws use ZH-Lex's published current-version links
+  (`https://www.zhlex.zh.ch/Erlass.html?Open&Ordnr=…`). Keep these rather than
+  version-specific detail pages or PDFs, which can point to superseded texts.
+
 - Typer enables styled help on GitHub Actions. CLI text assertions must strip
   ANSI sequences with `Text.from_ansi(...).plain` before matching option names or summaries.
 - Municipal website and law collection links were checked on 2026-10-23. Collection

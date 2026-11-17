@@ -10,9 +10,11 @@ schnell finden. Suche mit Umlauten oder Umschreibungen, Filter nach Gemeindetyp 
 Rückmeldungen per E-Mail über den Link im Kopfbereich.
 Zusätzliche Links führen direkt zur Gemeindeordnung und zum Personalrecht der
 politischen Gemeinden. «—» bedeutet, dass kein Link verifiziert werden konnte.
+Oben stehen Direktlinks zu GG, VGG, GPR, VPR, VRG und KV in der jeweils aktuellen
+Fassung der Zürcher Gesetzessammlung (ZH-Lex).
 
 **Experimentelle Linksammlung; keine offizielle Publikation. Massgeblich sind die
-Originalpublikationen der Gemeinden.** Kontakt und Pflege: Team Data, Amt für
+Originalpublikationen des Kantons und der Gemeinden.** Kontakt und Pflege: Team Data, Amt für
 Statistik und Daten Kanton Zürich, [datashop@statistik.zh.ch](mailto:datashop@statistik.zh.ch).
 
 ## Daten und Prüfstand

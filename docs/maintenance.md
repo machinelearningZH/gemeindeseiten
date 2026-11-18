@@ -110,8 +110,9 @@ make check
 für Letztere Node.js. Es werden keine npm-Pakete benötigt. Die lokalen HTTP-Tests
 benötigen Zugriff auf einen Loopback-Port. Die CI prüft Python 3.13 und 3.14.
 
-Unter [Settings → Pages](https://github.com/machinelearningZH/gemeindeseiten/settings/pages)
-muss **Build and deployment → Source → GitHub Actions** eingestellt sein.
+Unter **Settings → Pages → Build and deployment → Source** muss **GitHub Actions**
+eingestellt sein. Die [GitHub-Dokumentation zur Veröffentlichungsquelle](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site#publishing-with-a-custom-github-actions-workflow)
+beschreibt die Einstellung und die erforderlichen Repository-Berechtigungen.
 Die vorhandene Sichtbarkeit beibehalten. Die veröffentlichte Standardadresse ist
 `https://machinelearningzh.github.io/gemeindeseiten/`.
 

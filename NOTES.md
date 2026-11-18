@@ -24,3 +24,10 @@ Routine commands and publication settings: [maintenance guide](docs/maintenance.
 - Mixed Besoldungsverordnungen qualify as Personalrecht only when the published text
   actually covers municipal staff. Authority-only compensation and school-only rules
   are excluded. A blocked collection or a missing published personnel rule leaves a dash.
+- Prefer the main personnel law when the collection also lists implementing rules.
+  Regensberg's local Besoldungsverordnung refers municipal staff to cantonal personnel
+  law and applies locally to their expenses only, so the direct link is blank.
+- For a new law, check the effective date in its text. ePublikation can list a
+  successor and its in-force predecessor as published at the same time.
+- Mettmenstetten's 2017 Gemeindeordnung remains in the collection after voters
+  rejected the total revision on 28 September 2025. [Official result](https://www.mettmenstetten.ch/public/upload/assets/2367/Kommunales%20Abstimmungsprotokoll.pdf?fp=1)

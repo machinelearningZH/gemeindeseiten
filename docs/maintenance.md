@@ -108,7 +108,7 @@ make check
 
 `make check` führt Ruff, pytest sowie die JavaScript-Selbstprüfung aus und benötigt
 für Letztere Node.js. Es werden keine npm-Pakete benötigt. Die lokalen HTTP-Tests
-benötigen Zugriff auf einen Loopback-Port. Die CI prüft Python 3.13 und 3.14.
+benötigen Zugriff auf einen Loopback-Port. Die CI prüft Python 3.13, 3.14 und 3.15.
 
 Unter **Settings → Pages → Build and deployment → Source** muss **GitHub Actions**
 eingestellt sein. Die [GitHub-Dokumentation zur Veröffentlichungsquelle](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site#publishing-with-a-custom-github-actions-workflow)
